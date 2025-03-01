@@ -3,6 +3,7 @@ package net.idothehax.foolssmp;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.idothehax.foolssmp.events.RandomDropFool;
+import net.idothehax.foolssmp.events.SoundsFool;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
@@ -19,6 +20,9 @@ public class Foolssmp implements ModInitializer {
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             if (server.getTicks() % RandomDropFool.DROP_INTERVAL_TICKS == 0) {
                 RandomDropFool.tickDrops(server.getWorlds());
+            }
+            if (server.getTicks() % SoundsFool.SOUND_INTERVAL_TICKS == 0) {
+                SoundsFool.playRandomSounds(server.getWorlds());
             }
         });
     }
