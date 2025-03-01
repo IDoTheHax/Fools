@@ -10,8 +10,12 @@
   "icon": "assets/foolssmp/icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.idothehax.foolssmp.Foolssmp"
+    "main": ["net.idothehax.foolssmp.Foolssmp"],
+    "cardinal-components": ["net.idothehax.foolssmp.ComponentInitializer"]
+  },
+  "custom": {
+    "cardinal-components": [
+      "foolssmp:lava_death_tracker"
     ]
   },
   "mixins": [
