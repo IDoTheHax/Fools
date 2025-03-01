@@ -4,7 +4,8 @@
   "package": "net.idothehax.foolssmp.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "CreeperEntityMixin"
+    "CreeperEntityMixin",
+    "LivingEntityMixin"
   ],
   "client": [
   ],
