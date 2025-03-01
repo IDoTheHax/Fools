@@ -9,6 +9,7 @@ import net.idothehax.foolssmp.commands.FoolsCommands;
 import net.idothehax.foolssmp.events.RandomDropFool;
 import net.idothehax.foolssmp.events.SoundsFool;
 import net.idothehax.foolssmp.events.achievements.LavaDeathTracker;
+import net.idothehax.foolssmp.events.achievements.NuclearCreeper;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -51,5 +52,7 @@ public class Foolssmp implements ModInitializer {
         });
 
         CommandRegistrationCallback.EVENT.register(FoolsCommands::register);
+
+        NuclearCreeper.register();
     }
 }

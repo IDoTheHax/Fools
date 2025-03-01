@@ -24,7 +24,7 @@ public class LavaDeathTracker implements Component, AutoSyncedComponent {
 
 
     private void grantHotTubAchievement(ServerPlayerEntity player) {
-        Identifier achievementId = Identifier.of("foolssmp", "hot_tub_time_machine");
+        Identifier achievementId = Identifier.of("foolssmp", "fools/hot_tub_time_machine");
         AdvancementEntry advancementEntry = player.getServer().getAdvancementLoader().get(achievementId);
         if (advancementEntry != null) {
             player.getAdvancementTracker().grantCriterion(advancementEntry, "hot_tub");

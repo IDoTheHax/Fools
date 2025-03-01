@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "count": 1,
+      "id": "minecraft:creeper_head"
+    },
+    "title": {
+      "translate": "advancements.foolssmp.nuclear_creeper.title"
+    },
+    "description": {
+      "translate": "advancements.foolssmp.nuclear_creeper.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:root",
+  "criteria": {
+    "nuclear_creeper": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "nuclear_creeper"
+    ]
+  ]
+}
