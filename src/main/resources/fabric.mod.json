@@ -6,9 +6,9 @@
   "description": "The official Fools SMP Minecraft Plugin",
   "authors": [],
   "contact": {},
-  "license": "unlicense",
+  "license": "ARR",
   "icon": "assets/foolssmp/icon.png",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "net.idothehax.foolssmp.Foolssmp"
