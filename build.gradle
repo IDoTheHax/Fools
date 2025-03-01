@@ -32,8 +32,8 @@ dependencies {
     modImplementation include("eu.pb4:polymer-blocks:${project.polymer_version}")
     modImplementation include("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
 
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.0"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.0.0"
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.0"
+    modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.0"
 
 }
 
