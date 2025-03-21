@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.idothehax.foolssmp.blocks.GamblingDevice;
 import net.idothehax.foolssmp.blocks.LuckyBlock;
 import net.idothehax.foolssmp.commands.FoolsCommands;
 import net.idothehax.foolssmp.events.GravityGlitch;
@@ -12,11 +14,13 @@ import net.idothehax.foolssmp.events.RandomDropFool;
 import net.idothehax.foolssmp.events.SoundsFool;
 import net.idothehax.foolssmp.events.achievements.LavaDeathTracker;
 import net.idothehax.foolssmp.events.achievements.NuclearCreeper;
+import net.idothehax.foolssmp.items.GenericItem;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.damage.DamageTypes;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -34,6 +38,13 @@ public class Foolssmp implements ModInitializer {
             .strength(1.0F, 1200.0F)
             .sounds(BlockSoundGroup.COPPER)
             .emissiveLighting(Blocks::always)));
+
+    public static final GamblingDevice GAMBLING_DEVICE = registerBlock("gambling_device", new GamblingDevice(
+            FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).strength(2.0f, 6.0f)
+    ));
+
+    public static final BlockItem GAMBLING_DEVICE_ITEM = registerItem("gambling_device", new GenericItem(new Item.Settings(), GAMBLING_DEVICE, "item/gambling_device"));
+
 
     @Override
     public void onInitialize() {
