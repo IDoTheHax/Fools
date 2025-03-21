@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.idothehax.foolssmp.blocks.LuckyBlock;
 import net.idothehax.foolssmp.commands.FoolsCommands;
+import net.idothehax.foolssmp.events.GravityGlitch;
 import net.idothehax.foolssmp.events.RandomDropFool;
 import net.idothehax.foolssmp.events.SoundsFool;
 import net.idothehax.foolssmp.events.achievements.LavaDeathTracker;
@@ -63,6 +64,8 @@ public class Foolssmp implements ModInitializer {
                 LOGGER.error("Failed to load Hot Tub Time Machine advancement");
             }
         });
+
+        ServerTickEvents.END_SERVER_TICK.register(GravityGlitch::tick);
 
         CommandRegistrationCallback.EVENT.register(FoolsCommands::register);
 

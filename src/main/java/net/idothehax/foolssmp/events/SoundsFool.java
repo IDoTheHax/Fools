@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class SoundsFool {
     private static final Random random = new Random();
-    public static final int SOUND_INTERVAL_TICKS = 20; // Every minute (20 ticks * 60 seconds)
+    public static final int SOUND_INTERVAL_TICKS = 1200; // Every minute (20 ticks * 60 seconds)
 
     private static final SoundEvent[] SOUNDS = {
             SoundEvents.BLOCK_ANVIL_LAND,
