@@ -1,0 +1,8 @@
+{
+  "block.gambling.gamble": {
+    "sounds": [
+      "foolssmp:lets_go_gambling"
+    ],
+    "subtitle": "subtitles.foolssmp.block.gambling.gamble"
+  }
+}

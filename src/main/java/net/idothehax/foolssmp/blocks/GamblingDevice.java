@@ -4,7 +4,9 @@ import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
-import net.idothehax.foolssmp.events.GravityGlitch; // Import for prank trigger
+import net.idothehax.foolssmp.Foolssmp; // For logging
+import net.idothehax.foolssmp.FoolsSounds;
+import net.idothehax.foolssmp.events.GravityGlitch;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,10 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -44,34 +47,41 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
 
     @Override
     public BlockState getPolymerBreakEventBlockState(BlockState state, ServerPlayerEntity player) {
-        return Blocks.JUKEBOX.getDefaultState(); // Looks like jukebox when broken
+        return Blocks.JUKEBOX.getDefaultState();
     }
 
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient || !(player instanceof ServerPlayerEntity)) {
-            return ActionResult.PASS; // Server-side only
+            return ActionResult.PASS;
         }
 
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-        ItemStack heldItem = player.getMainHandStack(); // Assume main hand for simplicity
+        ItemStack heldItem = player.getMainHandStack();
 
-        // Check if player is holding a diamond
         if (heldItem.getItem() != Items.DIAMOND) {
             serverPlayer.sendMessage(Text.of("Insert a diamond to gamble!"), true);
             return ActionResult.FAIL;
         }
 
-        // Consume the diamond
         heldItem.decrement(1);
 
-        // Roll the dice
+
+
+        // Log and play the sound
+        Foolssmp.LOGGER.info("Playing sound foolssmp:block.gambling.GAMBLING_SPIN at " + pos);
+        if (world instanceof ServerWorld serverWorld) {
+            serverWorld.playSound(null, pos, FoolsSounds.GAMBLING_SPIN, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        } else {
+            Foolssmp.LOGGER.warn("World is not ServerWorld, sound may not play: " + world);
+        }
+
         float roll = RANDOM.nextFloat();
-        if (roll < 0.50f) { // 50% chance for reward
+        if (roll < 0.50f) {
             giveReward(serverPlayer);
-        } else if (roll < 0.80f) { // 30% chance for loss
+        } else if (roll < 0.80f) {
             serverPlayer.sendMessage(Text.of("You lost your diamond, sucker!").copy().formatted(Formatting.RED), true);
-        } else { // 20% chance for prank
+        } else {
             GravityGlitch.startGlitch(serverPlayer);
             serverPlayer.sendMessage(Text.of("Gravity prank activated!").copy().formatted(Formatting.YELLOW), true);
         }
@@ -82,13 +92,13 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
     private void giveReward(ServerPlayerEntity player) {
         Item reward;
         float rewardRoll = RANDOM.nextFloat();
-        if (rewardRoll < 0.60f) { // 60% of reward cases = common
+        if (rewardRoll < 0.60f) {
             reward = Items.IRON_INGOT;
             player.getInventory().insertStack(new ItemStack(reward, 5));
-        } else if (rewardRoll < 0.95f) { // 35% = uncommon
+        } else if (rewardRoll < 0.95f) {
             reward = Items.EMERALD;
             player.getInventory().insertStack(new ItemStack(reward, 2));
-        } else { // 5% = rare
+        } else {
             reward = Items.NETHER_STAR;
             player.getInventory().insertStack(new ItemStack(reward, 1));
         }
@@ -99,5 +109,6 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         super.appendTooltip(stack, context, tooltip, options);
         tooltip.add(Text.literal("Gamble a diamond for riches... or chaos!").formatted(Formatting.GOLD));
+
     }
 }

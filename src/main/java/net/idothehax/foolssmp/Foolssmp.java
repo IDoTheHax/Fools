@@ -1,5 +1,6 @@
 package net.idothehax.foolssmp;
 
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -81,6 +82,9 @@ public class Foolssmp implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(FoolsCommands::register);
 
         NuclearCreeper.register();
+        FoolsSounds.registerSounds();
+
+        PolymerResourcePackUtils.addModAssets("foolssmp");
     }
 
     private static <T extends Item> T registerItem(String id, T item) {
