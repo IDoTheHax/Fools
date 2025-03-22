@@ -4,5 +4,11 @@
       "foolssmp:lets_go_gambling"
     ],
     "subtitle": "subtitles.foolssmp.block.gambling.gamble"
+  },
+  "block.gambling.aw_dangit": {
+    "sounds": [
+      "foolssmp:aw_dangit"
+    ],
+    "subtitle": "subtitles.foolssmp.block.gambling.aw_dangit"
   }
 }

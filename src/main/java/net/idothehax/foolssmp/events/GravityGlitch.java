@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class GravityGlitch {
     private static final Random RANDOM = new Random();
-    private static final float GRAVITY_CHANCE = 0.05f; // 5% chance per jump
+    private static final float GRAVITY_CHANCE = 0.005f; // 0.5% chance per jump
     private static final int GLITCH_DURATION = 80; // 4 seconds (20 ticks/second)
     private static final Map<UUID, Integer> activeGlitches = new HashMap<>(); // Player UUID -> ticks remaining
 

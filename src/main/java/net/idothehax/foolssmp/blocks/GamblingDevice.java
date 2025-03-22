@@ -4,7 +4,7 @@ import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
-import net.idothehax.foolssmp.Foolssmp; // For logging
+import net.idothehax.foolssmp.Foolssmp;
 import net.idothehax.foolssmp.FoolsSounds;
 import net.idothehax.foolssmp.events.GravityGlitch;
 import net.minecraft.block.Block;
@@ -33,6 +33,7 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
     private static final Random RANDOM = new Random();
     private final BlockState polymerBlockState;
     private final PolymerBlockModel model;
+    private static final int DELAY_TICKS = 30; // 1.5 seconds
 
     public GamblingDevice(Settings settings) {
         super(settings);
@@ -66,27 +67,48 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
 
         heldItem.decrement(1);
 
-
-
-        // Log and play the sound
+        // Play the spin sound immediately
         Foolssmp.LOGGER.info("Playing sound foolssmp:block.gambling.GAMBLING_SPIN at " + pos);
         if (world instanceof ServerWorld serverWorld) {
             serverWorld.playSound(null, pos, FoolsSounds.GAMBLING_SPIN, SoundCategory.BLOCKS, 1.0f, 1.0f);
-        } else {
-            Foolssmp.LOGGER.warn("World is not ServerWorld, sound may not play: " + world);
-        }
 
-        float roll = RANDOM.nextFloat();
-        if (roll < 0.50f) {
-            giveReward(serverPlayer);
-        } else if (roll < 0.80f) {
-            serverPlayer.sendMessage(Text.of("You lost your diamond, sucker!").copy().formatted(Formatting.RED), true);
+            // Schedule the roll outcome after 30 ticks
+            serverWorld.getServer().execute(() -> {
+                serverWorld.scheduleBlockTick(pos, this, DELAY_TICKS);
+            });
+            serverPlayer.sendMessage(Text.of("Spinning...").copy().formatted(Formatting.GRAY), true);
         } else {
-            GravityGlitch.startGlitch(serverPlayer);
-            serverPlayer.sendMessage(Text.of("Gravity prank activated!").copy().formatted(Formatting.YELLOW), true);
+            Foolssmp.LOGGER.warn("World is not ServerWorld, sound and delay may not work: " + world);
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    protected void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, net.minecraft.util.math.random.Random random) {
+        // Find the nearest player to send messages/play sounds to
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 10.0, false);
+        if (serverPlayer == null) {
+            Foolssmp.LOGGER.warn("No player found near " + pos + " for gambling outcome");
+            return;
+        }
+
+        serverPlayer.sendMessage(Text.of("You lost your diamond, sucker!").copy().formatted(Formatting.RED), true);
+        world.playSound(null, pos, FoolsSounds.AW_DANGIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+
+        //float roll = RANDOM.nextFloat();
+        //if (roll < 0.50f) {
+        //    giveReward(serverPlayer);
+        //} else if (roll < 0.80f) {
+        //    serverPlayer.sendMessage(Text.of("You lost your diamond, sucker!").copy().formatted(Formatting.RED), true);
+        //    world.playSound(null, pos, FoolsSounds.AW_DANGIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        //} else {
+        //    serverPlayer.sendMessage(Text.of("You lost your diamond, sucker!").copy().formatted(Formatting.RED), true);
+        //    world.playSound(null, pos, FoolsSounds.AW_DANGIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        //    //GravityGlitch.startGlitch(serverPlayer);
+        //    //serverPlayer.sendMessage(Text.of("Gravity prank activated!").copy().formatted(Formatting.YELLOW), true);
+        //}
+        super.scheduledTick(state, world, pos, random);
     }
 
     private void giveReward(ServerPlayerEntity player) {
@@ -109,6 +131,5 @@ public class GamblingDevice extends Block implements PolymerTexturedBlock {
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         super.appendTooltip(stack, context, tooltip, options);
         tooltip.add(Text.literal("Gamble a diamond for riches... or chaos!").formatted(Formatting.GOLD));
-
     }
 }
